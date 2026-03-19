@@ -1,0 +1,8 @@
+{
+  "Products": ["перекресток", "пятёрочка", "магнит","красное&белое"],
+  "FoodDelivery": ["Яндекс.Еда", "Delivery Club"],
+  "Taxi": ["Uber", "Яндекс.Такси"],
+  "Books": ["Лабиринт", "Читай-город"],
+  "Merchandise": ["Ozon", "Wildberries"],
+  "Default": ["Other"]
+}

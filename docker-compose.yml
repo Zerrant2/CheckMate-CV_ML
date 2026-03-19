@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  recognition:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: recognition_service
+    runtime: nvidia
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all # Разрешаем доступ ко всем GPU
+    env_file:
+      - .env
+    volumes:
+      # Код проекта
+      - ./app:/app
+
+
+      # Конфигурационные файлы
+      - ./system_prompt.txt:/app/system_prompt.txt
+      - ./document_prompt.txt:/app/document_prompt.txt
+      - ./store_categories.json:/app/store_categories.json
+
+      - shared:/mnt/shared
+
+    depends_on:
+      - rabbitmq
+    command: ["python", "recognition_service.py"]
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Web UI
+
+volumes:
+  shared:
+    driver_opts:
+      type: cifs
+      o: username=xxx,password=xxx,domain=xxx,vers=3.0
+      device: "//192.168.0.1/checkmate-test"
